@@ -12,6 +12,7 @@ input/code/saved/
 .viminfo
 .vscode-server/
 .wget-hsts
+*/workspace/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
