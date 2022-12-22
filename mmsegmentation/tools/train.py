@@ -20,6 +20,23 @@ from mmseg.models import build_segmentor
 from mmseg.utils import (collect_env, get_device, get_root_logger,
                          setup_multi_processes)
 
+import random
+import numpy as np
+import wandb
+
+def seed_everything(seed:int = 42):
+    """재현을 하기 위한 시드 고정 함수
+    Args:
+        seed (int, optional): 시드. Defaults to 42.
+    """
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # if use multi-GPU
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    np.random.seed(seed)
+    random.seed(seed)
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a segmentor')
@@ -105,13 +122,37 @@ def parse_args():
                       '--options will not be supported in version v0.22.0.')
         args.cfg_options = args.options
 
+    # wandb 프로젝트와 실험이름을 저장하기 위해 argpaser 추가함
+    parser.add_argument('--project_name', type=str, default="Segmentation")
+    parser.add_argument('--exp_name', type=str, default="experiment")
+    # 선택적으로 log를 남기거나 validation할 수 있도록 argparser 추가함
+    #parser.add_argument('--log_wandb', type=str, default="True")
+    #parser.add_argument('--log_val', type=str, default="True")
+    
     return args
 
 
 def main():
+    # 시드 고정
+    seed_everything(42)
+    
     args = parse_args()
 
     cfg = Config.fromfile(args.config)
+    
+    # # wnadb 설정
+    # cfg.log_config.hooks = [
+    # dict(type='TextLoggerHook'),
+    # dict(type='WandbLoggerHook',
+    #      init_kwargs={"project": "SH_find_model", # 저장할 프로젝트이름
+    #                   "entity" : "boostcamp_aitech4_jdp", # 현재 팀 공통으로 쓰고있는 entity
+    #                   "name": "upernet_convnext_xlarge_fp16"}, # 실험 이름
+    #      interval=10,
+    #     #  log_checkpoint=True,
+    #     #  log_checkpoint_metadata=True,
+    #     #  num_eval_images=100
+    #      )]
+    
     if args.cfg_options is not None:
         cfg.merge_from_dict(args.cfg_options)
 
