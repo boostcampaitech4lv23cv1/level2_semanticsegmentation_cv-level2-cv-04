@@ -21,10 +21,13 @@ input/code/saved/
 .netrc
 /mmsegmentation/tools/wandb
 /mmsegmentation/tools/work_dirs
+## for baseline code
+/mmsegmentation/submission/*.csv
 
 ### khh added for personal env
 utils/convert.sh
 mmsegmentation/tools/train_brotherhoon.sh
+mmsegmentation/tools/inference_brotherhoon.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
