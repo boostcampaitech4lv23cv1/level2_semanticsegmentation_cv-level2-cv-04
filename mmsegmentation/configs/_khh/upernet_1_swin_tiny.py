@@ -1,14 +1,25 @@
-_base_ = ['./_base_/models/upernet_r50.py']
+_base_ = ['./_base_/models/upernet_swin.py']
 
-# 모델 수정
-model = dict(pretrained='open-mmlab://resnet101_v1c', backbone=dict(depth=101))
+checkpoint_file = 'https://download.openmmlab.com/mmsegmentation/v0.5/pretrain/swin/swin_tiny_patch4_window7_224_20220317-1cdeb081.pth'  # noqa
+model = dict(
+    backbone=dict(
+        init_cfg=dict(type='Pretrained', checkpoint=checkpoint_file),
+        embed_dims=96,
+        depths=[2, 2, 6, 2],
+        num_heads=[3, 6, 12, 24],
+        window_size=7,
+        use_abs_pos_embed=False,
+        drop_path_rate=0.3,
+        patch_norm=True),
+    decode_head=dict(in_channels=[96, 192, 384, 768], num_classes=11),
+    auxiliary_head=dict(in_channels=384, num_classes=11))
 
 # 싹다 수정
 dataset_type = 'CustomDataset'
 data_root = '/opt/ml/input/data/mmseg'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
-
+crop_size = (512, 512)
 classes = [
     'Backgroud', 'General trash', 'Paper', 'Paper pack', 'Metal', 'Glass',
     'Plastic', 'Styrofoam', 'Plastic bag', 'Battery', 'Clothing'
@@ -197,10 +208,11 @@ optimizer = dict(
             'relative_position_bias_table': dict(decay_mult=0.),
             'norm': dict(decay_mult=0.)
         }))
-
+        
 # scheduler 수정 ※ lr의 변동 없음
 lr_config = dict(policy='poly', power=1, min_lr=0.00006, by_epoch=True)
 
+workflow = [('train', 1), ('val', 1)]
 runner = dict(type='EpochBasedRunner', max_epochs=25)
 checkpoint_config = dict(interval=5, save_last=True)
 evaluation = dict(metric='mIoU', save_best='mIoU')

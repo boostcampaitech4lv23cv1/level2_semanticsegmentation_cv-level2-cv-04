@@ -1,14 +1,16 @@
-_base_ = ['./_base_/models/upernet_r50.py']
+_base_ = ['./_base_/models/isanet_r50-d8.py']
 
-# 모델 수정
-model = dict(pretrained='open-mmlab://resnet101_v1c', backbone=dict(depth=101))
+model = dict(pretrained='open-mmlab://resnet101_v1c',
+             backbone=dict(depth=101),
+             decode_head=dict(num_classes=11),
+             auxiliary_head=dict(num_classes=11))
 
 # 싹다 수정
 dataset_type = 'CustomDataset'
 data_root = '/opt/ml/input/data/mmseg'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
-
+crop_size = (512, 512)
 classes = [
     'Backgroud', 'General trash', 'Paper', 'Paper pack', 'Metal', 'Glass',
     'Plastic', 'Styrofoam', 'Plastic bag', 'Battery', 'Clothing'
@@ -197,10 +199,11 @@ optimizer = dict(
             'relative_position_bias_table': dict(decay_mult=0.),
             'norm': dict(decay_mult=0.)
         }))
-
+        
 # scheduler 수정 ※ lr의 변동 없음
 lr_config = dict(policy='poly', power=1, min_lr=0.00006, by_epoch=True)
 
+workflow = [('train', 1), ('val', 1)]
 runner = dict(type='EpochBasedRunner', max_epochs=25)
 checkpoint_config = dict(interval=5, save_last=True)
 evaluation = dict(metric='mIoU', save_best='mIoU')

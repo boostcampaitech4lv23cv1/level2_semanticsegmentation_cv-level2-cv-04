@@ -1,7 +1,12 @@
-_base_ = ['./_base_/models/upernet_r50.py']
+_base_ = ['./upernet_1_swin_tiny.py']
 
-# 모델 수정
-model = dict(pretrained='open-mmlab://resnet101_v1c', backbone=dict(depth=101))
+checkpoint_file = 'https://download.openmmlab.com/mmsegmentation/v0.5/pretrain/swin/swin_small_patch4_window7_224_20220317-7ba6d6dd.pth'  # noqa
+model = dict(
+    backbone=dict(
+        init_cfg=dict(type='Pretrained', checkpoint=checkpoint_file),
+        depths=[2, 2, 18, 2]),
+    decode_head=dict(in_channels=[96, 192, 384, 768], num_classes=11),
+    auxiliary_head=dict(in_channels=384, num_classes=11))
 
 # 싹다 수정
 dataset_type = 'CustomDataset'
@@ -197,10 +202,11 @@ optimizer = dict(
             'relative_position_bias_table': dict(decay_mult=0.),
             'norm': dict(decay_mult=0.)
         }))
-
+        
 # scheduler 수정 ※ lr의 변동 없음
 lr_config = dict(policy='poly', power=1, min_lr=0.00006, by_epoch=True)
 
+workflow = [('train', 1), ('val', 1)]
 runner = dict(type='EpochBasedRunner', max_epochs=25)
 checkpoint_config = dict(interval=5, save_last=True)
 evaluation = dict(metric='mIoU', save_best='mIoU')

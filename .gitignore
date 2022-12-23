@@ -28,6 +28,7 @@ input/code/saved/
 utils/convert.sh
 mmsegmentation/tools/train_brotherhoon.sh
 mmsegmentation/tools/inference_brotherhoon.sh
+mmsegmentation/tools/*.out
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
