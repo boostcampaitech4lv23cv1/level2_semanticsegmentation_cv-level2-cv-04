@@ -1,1 +1,1 @@
-python train.py /opt/ml/mmsegmentation/configs/_sangheon_/upernet/upernet_convnext_xlarge_fp16_640x640_160k_ade20k_SH.py --work_dir ./work_dirs/upernet_convnext_xlarge_fp16_640x640_160k_ade20k_SH
+python train.py /opt/ml/mmsegmentation/configs/_sangheon_/fcn/fcn_r50-d8_512x512_80k_ade20k.py --work-dir ./work_dirs/fcn_r50 --project_name dataset_search --exp_name fold3
