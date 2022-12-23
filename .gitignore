@@ -1,4 +1,4 @@
-### Customs
+### Customs (Team Common)
 .bashrc
 input/data/
 input/code/submission/
@@ -17,6 +17,14 @@ input/code/saved/
 .ipython
 .bash_history
 .git
+## for wandb
+.netrc
+/mmsegmentation/tools/wandb
+/mmsegmentation/tools/work_dirs
+
+### khh added for personal env
+utils/convert.sh
+mmsegmentation/tools/train_brotherhoon.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
