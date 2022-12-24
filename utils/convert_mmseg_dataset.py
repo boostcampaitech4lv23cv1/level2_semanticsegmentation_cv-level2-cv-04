@@ -15,8 +15,8 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 
 ROOT = '/opt/ml/input/data'
-TRAINJSON = '/opt/ml/input/data/train.json'
-VALJSON = '/opt/ml/input/data/val.json'
+TRAINJSON = '/opt/ml/input/data/train_fold_3.json'
+VALJSON = '/opt/ml/input/data/val_fold_3.json'
 TESTJSON = '/opt/ml/input/data/test.json'
 
 category_names = [
