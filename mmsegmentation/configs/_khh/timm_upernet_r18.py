@@ -1,7 +1,19 @@
 _base_ = ['./_base_/models/upernet_r50.py']
 
+timm_backbone=dict( type="TIMMBackbone",
+                    model_name="resnet18",
+                    features_only=True,
+                    pretrained=True,   
+                    output_stride=8)
+
+
 # 모델 수정
-model = dict(decode_head=dict(num_classes=11), auxiliary_head=dict(num_classes=11))
+model = dict(
+    # pretrained='open-mmlab://resnet18_v1c', # open-mmlab의 pretrain 사용 x
+    backbone=timm_backbone,
+    decode_head=dict(in_channels=[64, 128, 256, 512], num_classes=11),
+    auxiliary_head=dict(in_channels=256, num_classes=11))
+
 
 # 싹다 수정
 dataset_type = 'CustomDataset'
@@ -20,14 +32,14 @@ palette = [[0, 0, 0], [192, 0, 128], [0, 128, 192], [0, 128, 64], [128, 0, 0],
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations'),
-    dict(type='Resize', img_scale=(1024, 1024)),
+    dict(type='Resize', img_scale=(512, 512)),
     dict(type='RandomFlip', prob=0.5),
     dict(
         type='Normalize',
         mean=[123.675, 116.28, 103.53],
         std=[58.395, 57.12, 57.375],
         to_rgb=True),
-    dict(type='Pad', size=(1024, 1024), pad_val=0, seg_pad_val=255),
+    dict(type='Pad', size=(512, 512), pad_val=0, seg_pad_val=255),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_semantic_seg'])
 ]
@@ -69,7 +81,7 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=4, # memory issue로 4로 변경(기존 8)
+    samples_per_gpu=8,
     workers_per_gpu=4,
     train=dict(
         type='CustomDataset',
@@ -79,14 +91,14 @@ data = dict(
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations'),
-            dict(type='Resize', img_scale=(1024, 1024)),
+            dict(type='Resize', img_scale=(512, 512)),
             dict(type='RandomFlip', prob=0.5),
             dict(
                 type='Normalize',
                 mean=[123.675, 116.28, 103.53],
                 std=[58.395, 57.12, 57.375],
                 to_rgb=True),
-            dict(type='Pad', size=(1024, 1024), pad_val=0, seg_pad_val=255),
+            dict(type='Pad', size=(512, 512), pad_val=0, seg_pad_val=255),
             dict(type='DefaultFormatBundle'),
             dict(type='Collect', keys=['img', 'gt_semantic_seg'])
         ],
@@ -197,10 +209,11 @@ optimizer = dict(
             'relative_position_bias_table': dict(decay_mult=0.),
             'norm': dict(decay_mult=0.)
         }))
-
+        
 # scheduler 수정 ※ lr의 변동 없음
 lr_config = dict(policy='poly', power=1, min_lr=0.00006, by_epoch=True)
 
+workflow = [('train', 1), ('val', 1)]
 runner = dict(type='EpochBasedRunner', max_epochs=25)
 checkpoint_config = dict(interval=5, save_last=True)
 evaluation = dict(metric='mIoU', save_best='mIoU')

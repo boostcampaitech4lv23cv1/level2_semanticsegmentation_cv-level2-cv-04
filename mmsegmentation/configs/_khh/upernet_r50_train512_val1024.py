@@ -20,14 +20,14 @@ palette = [[0, 0, 0], [192, 0, 128], [0, 128, 192], [0, 128, 64], [128, 0, 0],
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations'),
-    dict(type='Resize', img_scale=(1024, 1024)),
+    dict(type='Resize', img_scale=(512, 512)),
     dict(type='RandomFlip', prob=0.5),
     dict(
         type='Normalize',
         mean=[123.675, 116.28, 103.53],
         std=[58.395, 57.12, 57.375],
         to_rgb=True),
-    dict(type='Pad', size=(1024, 1024), pad_val=0, seg_pad_val=255),
+    dict(type='Pad', size=(512, 512), pad_val=0, seg_pad_val=255),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_semantic_seg'])
 ]
@@ -38,7 +38,7 @@ val_pipeline = [
         img_scale=(512, 512),
         flip=False,
         transforms=[
-            dict(type='Resize', keep_ratio=True),
+            dict(type='Resize', img_scale=(1024, 1024), keep_ratio=True),
             dict(type='RandomFlip'),
             dict(
                 type='Normalize',
@@ -69,7 +69,7 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=4, # memory issue로 4로 변경(기존 8)
+    samples_per_gpu=4,
     workers_per_gpu=4,
     train=dict(
         type='CustomDataset',
@@ -79,14 +79,14 @@ data = dict(
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations'),
-            dict(type='Resize', img_scale=(1024, 1024)),
+            dict(type='Resize', img_scale=(512, 512)),
             dict(type='RandomFlip', prob=0.5),
             dict(
                 type='Normalize',
                 mean=[123.675, 116.28, 103.53],
                 std=[58.395, 57.12, 57.375],
                 to_rgb=True),
-            dict(type='Pad', size=(1024, 1024), pad_val=0, seg_pad_val=255),
+            dict(type='Pad', size=(512, 512), pad_val=0, seg_pad_val=255),
             dict(type='DefaultFormatBundle'),
             dict(type='Collect', keys=['img', 'gt_semantic_seg'])
         ],
@@ -110,7 +110,7 @@ data = dict(
                 img_scale=(512, 512),
                 flip=False,
                 transforms=[
-                    dict(type='Resize', keep_ratio=True),
+                    dict(type='Resize', img_scale=(1024, 1024), keep_ratio=True),
                     dict(type='RandomFlip'),
                     dict(
                         type='Normalize',

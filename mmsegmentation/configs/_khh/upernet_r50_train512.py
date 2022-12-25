@@ -201,7 +201,7 @@ optimizer = dict(
 # scheduler 수정 ※ lr의 변동 없음
 lr_config = dict(policy='poly', power=1, min_lr=0.00006, by_epoch=True)
 
-runner = dict(type='EpochBasedRunner', max_epochs=1)
+runner = dict(type='EpochBasedRunner', max_epochs=25)
 checkpoint_config = dict(interval=5, save_last=True)
 evaluation = dict(metric='mIoU', save_best='mIoU')
 work_dir = './work_dirs/fcn_r50' # train.py에서 update됨

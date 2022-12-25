@@ -35,7 +35,7 @@ val_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(512, 512),
+        img_scale=(1024, 1024),
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=True),
@@ -107,10 +107,10 @@ data = dict(
             dict(type='LoadImageFromFile'),
             dict(
                 type='MultiScaleFlipAug',
-                img_scale=(512, 512),
+                img_scale=(1024, 1024),
                 flip=False,
                 transforms=[
-                    dict(type='Resize', keep_ratio=True),
+                    dict(type='Resize', img_scale=(1024, 1024), keep_ratio=True),
                     dict(type='RandomFlip'),
                     dict(
                         type='Normalize',
