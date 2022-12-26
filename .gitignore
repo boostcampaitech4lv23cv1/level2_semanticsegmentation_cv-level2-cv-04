@@ -30,6 +30,8 @@ mmsegmentation/tools/train_brotherhoon.sh
 mmsegmentation/tools/inference_brotherhoon.sh
 mmsegmentation/tools/*.out
 mmsegmentation/pretrain/
+ViT-Adapter
+SenFormer
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,18 +1,40 @@
-_base_ = ['./_base_/models/upernet_r50.py']
-
-timm_backbone=dict( type="TIMMBackbone",
-                    model_name="resnet18",
-                    features_only=True,
-                    pretrained=True,   
-                    output_stride=8)
-
-
-# 모델 수정
+_base_ = [
+    '../../_base_/models/senformer_swin.py'
+]
 model = dict(
-    # pretrained='open-mmlab://resnet18_v1c', # open-mmlab의 pretrain 사용 x
-    backbone=timm_backbone,
-    decode_head=dict(in_channels=[64, 128, 256, 512], num_classes=11),
-    auxiliary_head=dict(in_channels=256, num_classes=11))
+    pretrained=None,
+    backbone=dict(
+        pretrain_img_size=384,
+        embed_dims=192,
+        depths=[2, 2, 18, 2],
+        num_heads=[6, 12, 24, 48],
+        window_size=12,
+        use_abs_pos_embed=False,
+        drop_path_rate=0.3,
+        patch_norm=True,
+        with_cp=False
+        ),
+    neck=dict(
+        type='FPNT',
+        in_channels=[192, 384, 768, 1536],
+        out_channels=512,
+        num_outs=4,
+        depth_swin=1,
+        num_heads=8),
+    decode_head=dict(
+        type='SenFormer',
+        num_heads=8,
+        branch_depth=6,
+        in_channels=[512, 512, 512, 512],
+        in_index=[0, 1, 2, 3],
+        feature_strides=[4, 8, 16, 32],
+        num_classes=11,
+        align_corners=False),
+    auxiliary_head=dict(in_channels=768, num_classes=11),
+    init_cfg=dict(
+        type='Pretrained',
+        checkpoint='/opt/ml/mmsegmentation/pretrain/senformer_swin_large_512x512_coco.pth'
+    ))
 
 
 # 싹다 수정
@@ -81,7 +103,7 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=8,
+    samples_per_gpu=4, # 8 to 4
     workers_per_gpu=4,
     train=dict(
         type='CustomDataset',
@@ -209,13 +231,12 @@ optimizer = dict(
             'relative_position_bias_table': dict(decay_mult=0.),
             'norm': dict(decay_mult=0.)
         }))
-        
+
 # scheduler 수정 ※ lr의 변동 없음
 lr_config = dict(policy='poly', power=1, min_lr=0.00006, by_epoch=True)
 
-workflow = [('train', 1), ('val', 1)]
 runner = dict(type='EpochBasedRunner', max_epochs=25)
-checkpoint_config = dict(interval=5, save_last=True)
+checkpoint_config = dict(interval=25, save_last=True)
 evaluation = dict(metric='mIoU', save_best='mIoU')
 work_dir = './work_dirs/fcn_r50' # train.py에서 update됨
 gpu_ids = [0]

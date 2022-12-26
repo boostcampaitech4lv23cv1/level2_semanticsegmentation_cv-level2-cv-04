@@ -1,8 +1,8 @@
+import os
 from mmcv import Config
 from mmseg.models import build_segmentor
 from mmseg.datasets import build_dataloader, build_dataset
 from mmcv.runner import load_checkpoint
-import os
 from mmcv.parallel import MMDataParallel
 from mmseg.apis import single_gpu_test
 
@@ -35,7 +35,7 @@ def main():
     cfg.data.test.img_dir = args.root_test_dir
     cfg.data.test.pipeline[1]['img_scale'] = (512, 512)
     cfg.data.test.test_mode = True
-    cfg.data.samples_per_gpu = 4
+    cfg.data.samples_per_gpu = 1
     cfg.seed=21
     cfg.gpu_ids = [1]
     cfg.work_dir = args.work_dir
@@ -66,14 +66,14 @@ def main():
         pred = pred.reshape((1, 256, 2, 256, 2)).max(4).max(2)
         preds.append(' '.join(str(e) for e in pred.flatten()))
 
-    submission = pd.read_csv(f'../submission/sample_submission.csv', index_col=None)
+    submission = pd.read_csv('../submission/sample_submission.csv', index_col=None)
 
     # PredictionString 대입
     for file_name, string in zip(file_names, preds):
         submission = submission.append({"image_id" : file_name, "PredictionString" : string}, 
-                                   ignore_index=True)
+                                        ignore_index=True)
     # submission.csv로 저장
-    submission.to_csv(os.path.join(args.result_path, f'{args.weight_file_name}.csv'), index=False)
+    submission.to_csv(os.path.join(args.result_path, f'{os.path.dirname(args.work_dir)}_{args.weight_file_name}.csv'), index=False)
     
     
 if __name__ == "__main__":
