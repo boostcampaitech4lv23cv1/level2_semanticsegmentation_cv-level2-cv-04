@@ -7,7 +7,6 @@ model = dict(
     decode_head=dict(in_channels=[64, 128, 256, 512], num_classes=11),
     auxiliary_head=dict(in_channels=256, num_classes=11))
 
-
 # 싹다 수정
 dataset_type = 'CustomDataset'
 data_root = '/opt/ml/input/data/mmseg'
@@ -22,6 +21,7 @@ classes = [
 palette = [[0, 0, 0], [192, 0, 128], [0, 128, 192], [0, 128, 64], [128, 0, 0],
            [64, 0, 128], [64, 0, 192], [192, 128, 64], [192, 192, 128],
            [64, 64, 128], [128, 0, 192]]
+
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations'),
@@ -36,6 +36,7 @@ train_pipeline = [
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_semantic_seg'])
 ]
+
 val_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
@@ -54,6 +55,7 @@ val_pipeline = [
             dict(type='Collect', keys=['img'])
         ])
 ]
+
 test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
@@ -165,6 +167,7 @@ data = dict(
         palette=[[0, 0, 0], [192, 0, 128], [0, 128, 192], [0, 128, 64],
                  [128, 0, 0], [64, 0, 128], [64, 0, 192], [192, 128, 64],
                  [192, 192, 128], [64, 64, 128], [128, 0, 192]]))
+
 log_config = dict(
     interval=50,
     hooks=[
@@ -177,6 +180,7 @@ log_config = dict(
                 name='fold3'),
             interval=10)
     ])
+
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 load_from = None
@@ -184,7 +188,6 @@ resume_from = None
 # change work flow for hook validation loss
 workflow = [('train', 1), ('val', 1)] 
 cudnn_benchmark = True
-lr = 0.0001
 
 
 ## 신경쓸것들
@@ -194,7 +197,7 @@ optimizer_config = dict()
 optimizer = dict(
     # _delete_=True, # 기존게 없으므로 삭제
     type='AdamW',
-    lr=0.00006, # 6e-5
+    lr=5e-5*2, # 6e-5
     betas=(0.9, 0.999),
     weight_decay=0.01,
     paramwise_cfg=dict(
@@ -203,13 +206,13 @@ optimizer = dict(
             'relative_position_bias_table': dict(decay_mult=0.),
             'norm': dict(decay_mult=0.)
         }))
-        
-# scheduler 수정 ※ lr의 변동 없음
-lr_config = dict(policy='poly', power=1, min_lr=0.00006, by_epoch=True)
+
+# hold lr
+lr_config = dict(policy='poly', power=1, min_lr=5e-5*2, by_epoch=True)
 
 workflow = [('train', 1), ('val', 1)]
-runner = dict(type='EpochBasedRunner', max_epochs=25)
-checkpoint_config = dict(interval=5, save_last=True)
+runner = dict(type='EpochBasedRunner', max_epochs=50)
+checkpoint_config = dict(interval=25, save_last=True)
 evaluation = dict(metric='mIoU', save_best='mIoU')
 work_dir = './work_dirs/fcn_r50' # train.py에서 update됨
 gpu_ids = [0]

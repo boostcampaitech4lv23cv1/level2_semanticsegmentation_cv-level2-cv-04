@@ -134,9 +134,7 @@ def parse_args():
 def main():
     # 시드 고정
     seed_everything(42)
-    
     args = parse_args()
-
     cfg = Config.fromfile(args.config)
     
     # wnadb 설정
@@ -145,7 +143,8 @@ def main():
     dict(type='WandbLoggerHook',
          init_kwargs={"project": args.project_name, # 저장할 프로젝트이름
                       "entity" : "boostcamp_aitech4_jdp", # 현재 팀 공통으로 쓰고있는 entity
-                      "name": args.exp_name}, # 실험 이름
+                      "name": args.exp_name, # 실험 이름
+                      }, 
          interval=10,
          )]
     
@@ -265,6 +264,7 @@ def main():
     model.CLASSES = datasets[0].CLASSES
     # passing checkpoint meta for saving best checkpoint
     meta.update(cfg.checkpoint_config.meta)
+    
     train_segmentor(
         model,
         datasets,

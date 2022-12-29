@@ -1,12 +1,43 @@
-_base_ = ['./_base_/models/upernet_r50.py']
+_base_ = ['./_base_/models/upernet_r50_bb.py']
 
+timm_backbone=dict( type="TIMMBackbone",
+                    model_name="tf_efficientnet_l2_ns_475",
+                    features_only=True,
+                    pretrained=True,   
+                    out_indices=[1, 2, 3, 4], # out_indices = (0,1,2,3) → (1,2,3,4)로 변경
+                    # output_stride=8
+                    )
+
+norm_cfg = dict(type='SyncBN', requires_grad=True)
 # 모델 수정
-model = dict(
-    pretrained='open-mmlab://resnet18_v1c',
-    backbone=dict(depth=18),
-    decode_head=dict(in_channels=[64, 128, 256, 512], num_classes=11),
-    auxiliary_head=dict(in_channels=256, num_classes=11))
 
+model = dict(
+    backbone=timm_backbone,
+    decode_head=dict(
+        type='UPerHead',
+        in_channels=[104, 176, 480, 1376],
+        in_index=[0, 1, 2, 3],
+        pool_scales=(1, 2, 3, 6),
+        channels=512,
+        dropout_ratio=0.1,
+        num_classes=11,
+        norm_cfg=norm_cfg,
+        align_corners=False,
+        loss_decode=dict(
+            type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0)),
+    auxiliary_head=dict(
+        type='FCNHead',
+        in_channels=480,
+        in_index=2,
+        channels=256,
+        num_convs=1,
+        concat_input=False,
+        dropout_ratio=0.1,
+        num_classes=11,
+        norm_cfg=norm_cfg,
+        align_corners=False,
+        loss_decode=dict(
+            type='CrossEntropyLoss', use_sigmoid=False, loss_weight=0.4)))
 
 # 싹다 수정
 dataset_type = 'CustomDataset'
@@ -74,7 +105,7 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=8,
+    samples_per_gpu=2,
     workers_per_gpu=4,
     train=dict(
         type='CustomDataset',
@@ -181,8 +212,7 @@ dist_params = dict(backend='nccl')
 log_level = 'INFO'
 load_from = None
 resume_from = None
-# change work flow for hook validation loss
-workflow = [('train', 1), ('val', 1)] 
+workflow = [('train', 1)]
 cudnn_benchmark = True
 lr = 0.0001
 
@@ -209,7 +239,7 @@ lr_config = dict(policy='poly', power=1, min_lr=0.00006, by_epoch=True)
 
 workflow = [('train', 1), ('val', 1)]
 runner = dict(type='EpochBasedRunner', max_epochs=25)
-checkpoint_config = dict(interval=5, save_last=True)
+checkpoint_config = dict(interval=25, save_last=True)
 evaluation = dict(metric='mIoU', save_best='mIoU')
 work_dir = './work_dirs/fcn_r50' # train.py에서 update됨
 gpu_ids = [0]

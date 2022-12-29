@@ -194,7 +194,7 @@ optimizer_config = dict()
 optimizer = dict(
     # _delete_=True, # 기존게 없으므로 삭제
     type='AdamW',
-    lr=0.00006, # 6e-5
+    lr=6e-5, # 6e-5
     betas=(0.9, 0.999),
     weight_decay=0.01,
     paramwise_cfg=dict(
@@ -204,12 +204,19 @@ optimizer = dict(
             'norm': dict(decay_mult=0.)
         }))
         
-# scheduler 수정 ※ lr의 변동 없음
-lr_config = dict(policy='poly', power=1, min_lr=0.00006, by_epoch=True)
+# CosineAnnealing
+lr_config = dict(
+    policy='CosineAnnealing',
+    warmup_by_epoch = True,
+    warmup='linear',
+    warmup_iters= 15, # wramup_by_epoch가 켜지면 epoch로 변환하게 됨
+    warmup_ratio= 1.0 / 10,
+    min_lr_ratio= 1.0 / 2
+    )
 
 workflow = [('train', 1), ('val', 1)]
 runner = dict(type='EpochBasedRunner', max_epochs=25)
-checkpoint_config = dict(interval=5, save_last=True)
+checkpoint_config = dict(interval=25, save_last=True)
 evaluation = dict(metric='mIoU', save_best='mIoU')
 work_dir = './work_dirs/fcn_r50' # train.py에서 update됨
 gpu_ids = [0]
