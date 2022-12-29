@@ -66,7 +66,7 @@ def main():
         pred = pred.reshape((1, 256, 2, 256, 2)).max(4).max(2)
         preds.append(' '.join(str(e) for e in pred.flatten()))
 
-    submission = pd.read_csv('../submission/sample_submission.csv', index_col=None)
+    submission = pd.read_csv(f'../submission/sample_submission.csv', index_col=None)
 
     # PredictionString 대입
     for file_name, string in zip(file_names, preds):
