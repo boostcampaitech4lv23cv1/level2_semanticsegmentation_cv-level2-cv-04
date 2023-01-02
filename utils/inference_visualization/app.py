@@ -12,6 +12,7 @@ st.set_page_config(layout="wide")
 
 parser = argparse.ArgumentParser(description='basic Argparse')
 parser.add_argument('--submission_csv', type=str, help='Infered된 csv 파일의 경로 ex)~/output.csv', default='./output.csv')
+parser.add_argument('--second_csv', type=str, required=False, default = './output.csv')
 parser.add_argument('--dataset_path', type=str, help='데이터셋 폴더 경로', default='/opt/ml/input/data')
 args = parser.parse_args()
 
@@ -87,15 +88,7 @@ def imshow_semantic(img,
     return img
 
 
-def main():
-    st.title("Visualize your submission file")
-    
-    df = pd.read_csv(args.submission_csv, index_col=False)
-        
-    #image index 설정
-    image_index = int(st.sidebar.number_input('보고싶은 이미지의 인덱스:', value=0))
-    st.sidebar.image('./resources/colormap.png')
-    
+def get_img(image_index, df):
     image = df.iloc[image_index, 0]
     image = cv.imread(osp.join(args.dataset_path, image))
     image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
@@ -108,15 +101,43 @@ def main():
     
     pred_image = imshow_semantic(image, pred)
     
+    return image, pred_image, count_dict, unique
 
-    col1, col2 = st.columns(2)
-    col1.text('Original Image')
-    col1.image(image)
-    col2.text('Infered Result')
-    col2.image(pred_image)
+
+def main():
+    st.title("Visualize your submission file")
+    #image index 설정
+    image_index = int(st.sidebar.number_input('보고싶은 이미지의 인덱스:', value=0))
+    st.sidebar.image('./colormap.png')
     
-    for c in sorted(unique, key=lambda x : count_dict[x], reverse=True):
-        st.text(f'{classes[c]} : {round((count_dict[c] / 65536) * 100, 2)} %')
+    df = pd.read_csv(args.submission_csv, index_col=False)
+    three_images = st.sidebar.checkbox('두 csv를 동시에 출력하고 싶으면 체크')
+    if three_images:
+        df_2 = pd.read_csv(args.second_csv, index_col=False)
+
+    image, pred_image, count_dict, unique = get_img(image_index, df)
+    if three_images:
+        image_2, pred_image_2, count_dict_2, unique_2 = get_img(image_index, df_2)
+        col1, col2, col3 = st.columns(3)
+        col1.text('Original Image')
+        col1.image(image)
+        col2.text('First Result')
+        col2.image(pred_image)
+        col3.text('Second Result')
+        col3.image(pred_image_2)
+        for c in sorted(unique, key=lambda x : count_dict[x], reverse=True):
+            col2.text(f'{classes[c]} : {round((count_dict[c] / 65536) * 100, 2)} %')
+        for c in sorted(unique_2, key=lambda x : count_dict_2[x], reverse=True):
+            col3.text(f'{classes[c]} : {round((count_dict_2[c] / 65536) * 100, 2)} %')
+    else:
+        col1, col2 = st.columns(2)
+        col1.text('Original Image')
+        col1.image(image)
+        col2.text('Infered Result')
+        col2.image(pred_image)
+    
+        for c in sorted(unique, key=lambda x : count_dict[x], reverse=True):
+            col2.text(f'{classes[c]} : {round((count_dict[c] / 65536) * 100, 2)} %')
     
 
 main()
