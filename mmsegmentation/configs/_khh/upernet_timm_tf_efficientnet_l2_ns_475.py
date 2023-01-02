@@ -5,7 +5,6 @@ timm_backbone=dict( type="TIMMBackbone",
                     features_only=True,
                     pretrained=True,   
                     out_indices=[1, 2, 3, 4], # out_indices = (0,1,2,3) → (1,2,3,4)로 변경
-                    # output_stride=8
                     )
 
 norm_cfg = dict(type='SyncBN', requires_grad=True)

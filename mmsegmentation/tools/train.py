@@ -68,7 +68,7 @@ def parse_args():
         default=0,
         help='id of gpu to use '
         '(only applicable to non-distributed training)')
-    parser.add_argument('--seed', type=int, default=None, help='random seed')
+    parser.add_argument('--seed', type=int, default=42, help='random seed') # default seed 부여
     parser.add_argument(
         '--diff_seed',
         action='store_true',
@@ -222,8 +222,10 @@ def main():
 
     # set random seeds
     cfg.device = get_device()
+    print("original seed: ", args.seed)
     seed = init_random_seed(args.seed, device=cfg.device)
     seed = seed + dist.get_rank() if args.diff_seed else seed
+    print("after diff_seed: ", seed)
     logger.info(f'Set random seed to {seed}, '
                 f'deterministic: {args.deterministic}')
     set_random_seed(seed, deterministic=args.deterministic)
