@@ -108,7 +108,7 @@ def main():
     st.title("Visualize your submission file")
     #image index 설정
     image_index = int(st.sidebar.number_input('보고싶은 이미지의 인덱스:', value=0))
-    st.sidebar.image('./colormap.png')
+    st.sidebar.image('./resources/colormap.png')
     
     df = pd.read_csv(args.submission_csv, index_col=False)
     three_images = st.sidebar.checkbox('두 csv를 동시에 출력하고 싶으면 체크')
