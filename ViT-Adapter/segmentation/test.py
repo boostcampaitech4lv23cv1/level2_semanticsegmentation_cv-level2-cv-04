@@ -295,7 +295,7 @@ def main():
         submission = submission.append({"image_id" : file_name, "PredictionString" : string}, 
                                    ignore_index=True)
     # submission.csv로 저장
-    submission.to_csv(os.path.join(args.result_path, 'mask2former_beit_adapter_large_640_24ecpoh.csv'), index=False)
+    submission.to_csv(os.path.join(args.result_path, 'mask2former_beit_adapter_large_640_finetuning_epoch9.csv'), index=False)
 
 
 if __name__ == '__main__':
