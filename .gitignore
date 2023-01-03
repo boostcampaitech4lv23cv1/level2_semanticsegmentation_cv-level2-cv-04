@@ -33,6 +33,7 @@ mmsegmentation/tools/*.out
 mmsegmentation/pretrain/
 ViT-Adapter
 SenFormer
+utils/pseudo.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
