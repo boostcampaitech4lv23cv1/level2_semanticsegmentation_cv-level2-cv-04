@@ -17,6 +17,9 @@ input/code/saved/
 .ipython
 .bash_history
 .git
+
+
+
 ## for wandb
 .netrc
 /mmsegmentation/tools/wandb
