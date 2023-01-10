@@ -17,6 +17,9 @@ input/code/saved/
 .ipython
 .bash_history
 .git
+
+
+
 ## for wandb
 .netrc
 /mmsegmentation/tools/wandb
@@ -27,7 +30,13 @@ input/code/saved/
 ### khh added for personal env
 utils/convert.sh
 mmsegmentation/tools/train_brotherhoon.sh
-mmsegmentation/tools/inference_brotherhoon.sh
+mmsegmentation/tools/inference_brotherhoon.sh  
+mmsegmentation/tools/inference_brotherhoon.py
+mmsegmentation/tools/*.out
+mmsegmentation/pretrain/
+ViT-Adapter
+SenFormer
+utils/pseudo.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
