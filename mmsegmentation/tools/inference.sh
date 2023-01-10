@@ -1,0 +1,1 @@
+python inference.py --config_path /opt/ml/mmsegmentation/tools/work_dirs/upernet_convnext_xlarge_fp16_640x640_160k_ade20k_SH/upernet_convnext_xlarge_fp16_640x640_160k_ade20k_SH.py --root_test_dir ../../data/mmseg/test --work_dir ./work_dirs/upernet_convnext_xlarge_fp16_640x640_160k_ade20k_SH --test_json_path ../../input/data/test.json --weight_file_name best_mIoU_epoch_27

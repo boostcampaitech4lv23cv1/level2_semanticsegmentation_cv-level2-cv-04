@@ -20,6 +20,23 @@ from mmseg.models import build_segmentor
 from mmseg.utils import (collect_env, get_device, get_root_logger,
                          setup_multi_processes)
 
+import random
+import numpy as np
+import wandb
+
+def seed_everything(seed:int = 42):
+    """재현을 하기 위한 시드 고정 함수
+    Args:
+        seed (int, optional): 시드. Defaults to 42.
+    """
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # if use multi-GPU
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    np.random.seed(seed)
+    random.seed(seed)
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a segmentor')
@@ -51,7 +68,7 @@ def parse_args():
         default=0,
         help='id of gpu to use '
         '(only applicable to non-distributed training)')
-    parser.add_argument('--seed', type=int, default=None, help='random seed')
+    parser.add_argument('--seed', type=int, default=42, help='random seed') # default seed 부여
     parser.add_argument(
         '--diff_seed',
         action='store_true',
@@ -91,6 +108,11 @@ def parse_args():
         '--auto-resume',
         action='store_true',
         help='resume from the latest checkpoint automatically.')
+    
+    # wandb 프로젝트와 실험이름을 저장하기 위해 argpaser 추가함
+    parser.add_argument('--project_name', type=str, default="Segmentation")
+    parser.add_argument('--exp_name', type=str, default="experiment")
+    
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
@@ -105,13 +127,27 @@ def parse_args():
                       '--options will not be supported in version v0.22.0.')
         args.cfg_options = args.options
 
+    
     return args
 
 
 def main():
+    # 시드 고정
+    seed_everything(42)
     args = parse_args()
-
     cfg = Config.fromfile(args.config)
+    
+    # wnadb 설정
+    cfg.log_config.hooks = [
+    dict(type='TextLoggerHook'),
+    dict(type='WandbLoggerHook',
+         init_kwargs={"project": args.project_name, # 저장할 프로젝트이름
+                      "entity" : "boostcamp_aitech4_jdp", # 현재 팀 공통으로 쓰고있는 entity
+                      "name": args.exp_name, # 실험 이름
+                      }, 
+         interval=10,
+         )]
+    
     if args.cfg_options is not None:
         cfg.merge_from_dict(args.cfg_options)
 
@@ -186,8 +222,10 @@ def main():
 
     # set random seeds
     cfg.device = get_device()
+    print("original seed: ", args.seed)
     seed = init_random_seed(args.seed, device=cfg.device)
     seed = seed + dist.get_rank() if args.diff_seed else seed
+    print("after diff_seed: ", seed)
     logger.info(f'Set random seed to {seed}, '
                 f'deterministic: {args.deterministic}')
     set_random_seed(seed, deterministic=args.deterministic)
@@ -228,6 +266,7 @@ def main():
     model.CLASSES = datasets[0].CLASSES
     # passing checkpoint meta for saving best checkpoint
     meta.update(cfg.checkpoint_config.meta)
+    
     train_segmentor(
         model,
         datasets,

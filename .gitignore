@@ -1,4 +1,4 @@
-### Customs
+### Customs (Team Common)
 .bashrc
 input/data/
 input/code/submission/
@@ -12,7 +12,31 @@ input/code/saved/
 .viminfo
 .vscode-server/
 .wget-hsts
-*/workspace/
+**/workspace/
+.config
+.ipython
+.bash_history
+.git
+
+
+
+## for wandb
+.netrc
+/mmsegmentation/tools/wandb
+/mmsegmentation/tools/work_dirs
+## for baseline code
+/mmsegmentation/submission/*.csv
+
+### khh added for personal env
+utils/convert.sh
+mmsegmentation/tools/train_brotherhoon.sh
+mmsegmentation/tools/inference_brotherhoon.sh  
+mmsegmentation/tools/inference_brotherhoon.py
+mmsegmentation/tools/*.out
+mmsegmentation/pretrain/
+ViT-Adapter
+SenFormer
+utils/pseudo.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

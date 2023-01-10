@@ -1,0 +1,191 @@
+(deformable_detr) root@605bc34845c3:~# conda install -n deformable_detr ipykernel --update-deps --force-reinstall
+Collecting package metadata (current_repodata.json): done
+Solving environment: / Solving environment: done
+done
+
+
+==> WARNING: A newer version of conda exists. <==
+  current version: 4.12.0
+  latest version: 22.11.1
+
+Please update conda by running
+
+    $ conda update -n base -c defaults conda
+
+
+
+## Package Plan ##
+
+  environment location: /opt/conda/envs/deformable_detr
+
+  added / updated specs:
+    - _libgcc_mutex
+    - _openmp_mutex
+    - backcall
+    - ca-certificates
+    - certifi
+    - debugpy
+    - decorator
+    - entrypoints
+    - ipykernel
+    - ipython
+    - jedi
+    - jupyter_client
+    - jupyter_core
+    - ld_impl_linux-64
+    - libffi
+    - libgcc-ng
+    - libgomp
+    - libsodium
+    - libstdcxx-ng
+    - matplotlib-inline
+    - ncurses
+    - nest-asyncio
+    - openssl
+    - packaging
+    - parso
+    - pexpect
+    - pickleshare
+    - pip
+    - prompt-toolkit
+    - psutil
+    - ptyprocess
+    - pygments
+    - python-dateutil
+    - python=3.7
+    - pyzmq
+    - readline
+    - setuptools
+    - six
+    - sqlite
+    - tk
+    - tornado
+    - traitlets
+    - wcwidth
+    - wheel
+    - xz
+    - zeromq
+    - zlib
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    backcall-0.2.0             |     pyhd3eb1b0_0          13 KB
+    debugpy-1.5.1              |   py37h295c915_0         1.7 MB
+    decorator-5.1.1            |     pyhd3eb1b0_0          12 KB
+    entrypoints-0.4            |   py37h06a4308_0          16 KB
+    ipykernel-6.15.2           |   py37h06a4308_0         189 KB
+    ipython-7.31.1             |   py37h06a4308_1        1002 KB
+    jedi-0.18.1                |   py37h06a4308_1         980 KB
+    jupyter_client-7.4.8       |   py37h06a4308_0         205 KB
+    jupyter_core-4.11.1        |   py37h06a4308_0          76 KB
+    libsodium-1.0.18           |       h7b6447c_0         244 KB
+    matplotlib-inline-0.1.6    |   py37h06a4308_0          16 KB
+    nest-asyncio-1.5.6         |   py37h06a4308_0          14 KB
+    packaging-22.0             |   py37h06a4308_0          68 KB
+    parso-0.8.3                |     pyhd3eb1b0_0          70 KB
+    prompt-toolkit-3.0.36      |   py37h06a4308_0         571 KB
+    psutil-5.9.0               |   py37h5eee18b_0         328 KB
+    pygments-2.11.2            |     pyhd3eb1b0_0         759 KB
+    python-dateutil-2.8.2      |     pyhd3eb1b0_0         233 KB
+    pyzmq-23.2.0               |   py37h6a678d5_0         438 KB
+    tornado-6.2                |   py37h5eee18b_0         584 KB
+    traitlets-5.7.1            |   py37h06a4308_0         199 KB
+    wcwidth-0.2.5              |     pyhd3eb1b0_0          26 KB
+    zeromq-4.3.4               |       h2531618_0         331 KB
+    ------------------------------------------------------------
+                                           Total:         7.9 MB
+
+The following NEW packages will be INSTALLED:
+
+  backcall           pkgs/main/noarch::backcall-0.2.0-pyhd3eb1b0_0
+  debugpy            pkgs/main/linux-64::debugpy-1.5.1-py37h295c915_0
+  decorator          pkgs/main/noarch::decorator-5.1.1-pyhd3eb1b0_0
+  entrypoints        pkgs/main/linux-64::entrypoints-0.4-py37h06a4308_0
+  ipykernel          pkgs/main/linux-64::ipykernel-6.15.2-py37h06a4308_0
+  ipython            pkgs/main/linux-64::ipython-7.31.1-py37h06a4308_1
+  jedi               pkgs/main/linux-64::jedi-0.18.1-py37h06a4308_1
+  jupyter_client     pkgs/main/linux-64::jupyter_client-7.4.8-py37h06a4308_0
+  jupyter_core       pkgs/main/linux-64::jupyter_core-4.11.1-py37h06a4308_0
+  libsodium          pkgs/main/linux-64::libsodium-1.0.18-h7b6447c_0
+  matplotlib-inline  pkgs/main/linux-64::matplotlib-inline-0.1.6-py37h06a4308_0
+  nest-asyncio       pkgs/main/linux-64::nest-asyncio-1.5.6-py37h06a4308_0
+  packaging          pkgs/main/linux-64::packaging-22.0-py37h06a4308_0
+  parso              pkgs/main/noarch::parso-0.8.3-pyhd3eb1b0_0
+  pexpect            pkgs/main/noarch::pexpect-4.8.0-pyhd3eb1b0_3
+  pickleshare        pkgs/main/noarch::pickleshare-0.7.5-pyhd3eb1b0_1003
+  prompt-toolkit     pkgs/main/linux-64::prompt-toolkit-3.0.36-py37h06a4308_0
+  psutil             pkgs/main/linux-64::psutil-5.9.0-py37h5eee18b_0
+  ptyprocess         pkgs/main/noarch::ptyprocess-0.7.0-pyhd3eb1b0_2
+  pygments           pkgs/main/noarch::pygments-2.11.2-pyhd3eb1b0_0
+  python-dateutil    pkgs/main/noarch::python-dateutil-2.8.2-pyhd3eb1b0_0
+  pyzmq              pkgs/main/linux-64::pyzmq-23.2.0-py37h6a678d5_0
+  tornado            pkgs/main/linux-64::tornado-6.2-py37h5eee18b_0
+  traitlets          pkgs/main/linux-64::traitlets-5.7.1-py37h06a4308_0
+  wcwidth            pkgs/main/noarch::wcwidth-0.2.5-pyhd3eb1b0_0
+  zeromq             pkgs/main/linux-64::zeromq-4.3.4-h2531618_0
+
+The following packages will be REMOVED:
+
+  blas-1.0-mkl
+  freetype-2.12.1-h4a9f257_0
+  giflib-5.2.1-h7b6447c_0
+  intel-openmp-2021.4.0-h06a4308_3561
+  jpeg-9e-h7f8727e_0
+  lcms2-2.12-h3be6417_0
+  lerc-3.0-h295c915_0
+  libdeflate-1.8-h7f8727e_5
+  libpng-1.6.37-hbc83047_0
+  libtiff-4.4.0-hecacb30_2
+  libwebp-1.2.4-h11a3e52_0
+  libwebp-base-1.2.4-h5eee18b_0
+  lz4-c-1.9.4-h6a678d5_0
+  mkl-2021.4.0-h06a4308_640
+  mkl-service-2.4.0-py37h7f8727e_0
+  mkl_fft-1.3.1-py37hd3c417c_0
+  mkl_random-1.2.2-py37h51133e4_0
+  ninja-1.10.2-h06a4308_5
+  ninja-base-1.10.2-hd09550d_5
+  numpy-1.21.5-py37h6c91a56_3
+  numpy-base-1.21.5-py37ha15fc14_3
+  pillow-9.3.0-py37hace64e9_1
+  zstd-1.5.2-ha4553b6_0
+
+The following packages will be SUPERSEDED by a higher-priority channel:
+
+  ca-certificates    conda-forge::ca-certificates-2022.12.~ --> pkgs/main::ca-certificates-2022.10.11-h06a4308_0
+  certifi            conda-forge/noarch::certifi-2022.12.7~ --> pkgs/main/linux-64::certifi-2022.12.7-py37h06a4308_0
+
+
+Proceed ([y]/n)? y
+
+
+Downloading and Extracting Packages
+wcwidth-0.2.5        | 26 KB     | ################################################################# | 100% 
+backcall-0.2.0       | 13 KB     | ################################################################# | 100% 
+prompt-toolkit-3.0.3 | 571 KB    | ################################################################# | 100% 
+decorator-5.1.1      | 12 KB     | ################################################################# | 100% 
+pygments-2.11.2      | 759 KB    | ################################################################# | 100% 
+packaging-22.0       | 68 KB     | ################################################################# | 100% 
+libsodium-1.0.18     | 244 KB    | ################################################################# | 100% 
+traitlets-5.7.1      | 199 KB    | ################################################################# | 100% 
+zeromq-4.3.4         | 331 KB    | ################################################################# | 100% 
+matplotlib-inline-0. | 16 KB     | ################################################################# | 100% 
+jedi-0.18.1          | 980 KB    | ################################################################# | 100% 
+psutil-5.9.0         | 328 KB    | ################################################################# | 100% 
+ipython-7.31.1       | 1002 KB   | ################################################################# | 100% 
+nest-asyncio-1.5.6   | 14 KB     | ################################################################# | 100% 
+pyzmq-23.2.0         | 438 KB    | ################################################################# | 100% 
+ipykernel-6.15.2     | 189 KB    | ################################################################# | 100% 
+python-dateutil-2.8. | 233 KB    | ################################################################# | 100% 
+jupyter_client-7.4.8 | 205 KB    | ################################################################# | 100% 
+parso-0.8.3          | 70 KB     | ################################################################# | 100% 
+tornado-6.2          | 584 KB    | ################################################################# | 100% 
+entrypoints-0.4      | 16 KB     | ################################################################# | 100% 
+jupyter_core-4.11.1  | 76 KB     | ################################################################# | 100% 
+debugpy-1.5.1        | 1.7 MB    | ################################################################# | 100% 
+Preparing transaction: done
+Verifying transaction: done
+Executing transaction: done
