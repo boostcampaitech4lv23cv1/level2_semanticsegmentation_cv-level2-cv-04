@@ -316,8 +316,7 @@ pseudo label의 효과를 직접 확인할 수 있는 실험이었다.
 
 | index | filename.py | 유틸리티 설명 |
 | --- | --- | --- |
-| 1 | make_pseudo_label.py | 학습된 모델을 이용하여 test data의 pseudo label(img annot)을 만들어
-mmseg에서 이용할 수 있도록 동작하는 유틸리티 |
+| 1 | make_pseudo_label.py | 학습된 모델을 이용하여 test data의 pseudo label(img annot)을 만들어 mmseg에서 이용할 수 있도록 동작하는 유틸리티 |
 | 2 | split_train_valid.ipynb | train_all을 class 분포가 유지하도록 train/validset으로 split하는 유틸리티 |
 | 3 | convert_mmseg_dataset.py | coco dataset을 mmseg에 맞는 dataset으로 변환해주는 유틸리티 |
 | 4 | copy_and_paste_augmentation.ipynb | 일정 클래스의 이미지를 마스킹해 배경 이미지에 붙여넣어 새로운 이미지를 생성하는 데이터 증강 유틸리티 |
