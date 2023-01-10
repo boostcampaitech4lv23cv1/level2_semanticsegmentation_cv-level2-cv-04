@@ -12,16 +12,22 @@ import tqdm
 
 
 def save_colored_mask(mask, save_path):
-    lbl_pil = Image.fromarray(mask.astype(np.uint8), mode="P")
-    colormap = imgviz.label_colormap()
-    lbl_pil.putpalette(colormap.flatten())
-    lbl_pil.save(save_path)
+    # lbl_pil = Image.fromarray(mask.astype(np.uint8), mode="P")
+    # colormap = imgviz.label_colormap()
+    # lbl_pil.putpalette(colormap.flatten())
+    # lbl_pil.save(save_path)
+    cv2.imwrite(save_path, mask)
 
 
 def random_flip_horizontal(mask, img, p=0.5):
-    if np.random.random() < p:
-        img = img[:, ::-1, :]
-        mask = mask[:, ::-1]
+    try:
+        if np.random.random() < p:
+            img = img[:, ::-1, :]
+            mask = mask[:, ::-1]
+    except:
+        print(type(img))
+        print(img.shape)
+        print(img)        
     return mask, img
 
 
@@ -124,8 +130,8 @@ def main(args):
     os.makedirs(os.path.join(args.output_dir, 'JPEGImages'), exist_ok=True)
 
     masks_path = os.listdir(segclass)
-    tbar = tqdm.tqdm(masks_path, ncols=100)
-    for mask_path in tbar:
+    tbar = tqdm.tqdm(masks_path, ncols=647) # image 개수로 바꿔줌
+    for idx, mask_path in enumerate(tbar):
         # get source mask and img
         mask_src = np.asarray(Image.open(os.path.join(segclass, mask_path)), dtype=np.uint8)
         img_src = cv2.imread(os.path.join(JPEGs, mask_path.replace('.png', '.jpg')))
@@ -138,7 +144,8 @@ def main(args):
         # Copy-Paste data augmentation
         mask, img = copy_paste(mask_src, img_src, mask_main, img_main)
 
-        mask_filename = "copy_paste_" + mask_path
+        # mask_filename = "copy_paste_" + mask_path
+        mask_filename = f"{{0:04d}}.png".format(2624+idx)
         img_filename = mask_filename.replace('.png', '.jpg')
         save_colored_mask(mask, os.path.join(args.output_dir, 'SegmentationClass', mask_filename))
         cv2.imwrite(os.path.join(args.output_dir, 'JPEGImages', img_filename), img)
